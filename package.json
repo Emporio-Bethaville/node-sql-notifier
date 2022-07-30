@@ -9,6 +9,7 @@
   "author": "Eiji Tomonari",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "mssql": "^8.1.2"
   }
 }
