@@ -18,35 +18,27 @@ const sqlConfig = {
   },
 };
 
-sql.connect(sqlConfig, (err) => {
-  // ... error checks
-  console.log(err);
-  const request = new sql.Request();
-  request.stream = true; // You can set streaming differently for each request
-  request.query("select * from dbo.itensComandas"); // or request.execute(procedure)
+const fetchSQLData = async () => {
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query("select * from dbo.itensComandas");
+    await sql.query("DELETE FROM dbo.itensComandas");
+    await sql.close();
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-  request.on("recordset", (columns) => {
-    // Emitted once for each recordset in a query
-  });
+const processData = async () => {
+  const data = await fetchSQLData();
+  if (data.rowsAffected == 0) {
+    console.log("Nenhum item processado");
+  } else {
+    console.log(data.rowsAffected + " Itens processados");
+  }
+};
 
-  request.on("row", (row) => {
-    // Emitted for each row in a recordset
-    console.log(row);
-  });
-
-  request.on("rowsaffected", (rowCount) => {
-    // Emitted for each INSERT, UPDATE, or DELETE statement in a batch.
-  });
-
-  request.on("error", (err) => {
-    // May be emitted multiple times
-  });
-
-  request.on("done", (result) => {
-    // Always emitted as the last one
-  });
-});
-
-sql.on("error", (err) => {
-  // ... error handler
-});
+setInterval(async () => {
+  processData();
+}, 5000);
