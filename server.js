@@ -1,5 +1,7 @@
 const sql = require("mssql");
 const dotenv = require("dotenv");
+const { connectDatabase } = require("./databaseService");
+
 dotenv.config();
 const sqlConfig = {
   port: 1433,
@@ -33,12 +35,14 @@ const fetchSQLData = async () => {
 const processData = async () => {
   const data = await fetchSQLData();
   if (data.rowsAffected == 0) {
-    console.log("Nenhum item processado");
+    console.log("Nenhum item detectado");
   } else {
     console.log(data.rowsAffected + " Itens processados");
   }
 };
 
-setInterval(async () => {
-  processData();
-}, 5000);
+// setInterval(async () => {
+//   processData();
+// }, 5000);
+
+connectDatabase();
