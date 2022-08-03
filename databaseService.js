@@ -19,7 +19,9 @@ const insertItem = async (ticket) => {
     if (
       ticket.quantity == null &&
       ticket.microterminal == null &&
-      ticket.dscrpt == null
+      ticket.dscrpt == null &&
+      ticket.details != "" &&
+      ticket.details != null
     ) {
       console.log("Ticket is an update operation");
       // Update item based on the itemNumber and id
