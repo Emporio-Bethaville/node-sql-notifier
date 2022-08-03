@@ -1,6 +1,6 @@
 const sql = require("mssql");
 const dotenv = require("dotenv");
-const { connectDatabase } = require("./databaseService");
+const { insertItem } = require("./databaseService");
 
 dotenv.config();
 const sqlConfig = {
@@ -45,4 +45,4 @@ const processData = async () => {
 //   processData();
 // }, 5000);
 
-connectDatabase();
+insertItem({ id: 1, description: "Pizza", details: "Pizza de calabresa" });
