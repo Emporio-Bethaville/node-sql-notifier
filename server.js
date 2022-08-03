@@ -60,15 +60,15 @@ const fetchSQLData = async () => {
 const processData = async () => {
   try {
     const data = await fetchSQLData();
-  if (data.rowsAffected == 0) {
-    console.log("No data to process");
-  } else {
-    data.recordset.forEach((item) => {
-      await insertItem(item);
-    });
-  }
+    if (data.rowsAffected == 0) {
+      console.log("No data to process");
+    } else {
+      data.recordset.forEach(async (item) => {
+        await insertItem(item);
+      });
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
