@@ -1,6 +1,5 @@
 const sql = require("mssql");
 const dotenv = require("dotenv");
-const { insertItem } = require("./databaseService");
 
 dotenv.config();
 const sqlConfig = {
@@ -24,7 +23,8 @@ const fetchSQLData = async () => {
   try {
     await sql.connect(sqlConfig);
     const result = await sql.query("select * from dbo.itensComandas");
-    await sql.query("DELETE FROM dbo.itensComandas");
+    // await sql.query("DELETE FROM dbo.itensComandas");
+    console.log(result);
     await sql.close();
     return result;
   } catch (err) {
@@ -41,8 +41,6 @@ const processData = async () => {
   }
 };
 
-// setInterval(async () => {
-//   processData();
-// }, 5000);
-
-insertItem({ id: 1, description: "Pizza", details: "Pizza de calabresa" });
+setInterval(async () => {
+  fetchSQLData();
+}, 5000);
