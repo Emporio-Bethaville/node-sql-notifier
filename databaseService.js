@@ -12,23 +12,46 @@ const client = new MongoClient(uri, {
 const databaseName = "Bethaville";
 const collectionName = "Comandas";
 
-// Insert a new item in the database
+// Insert or update an item in the database
 const insertItem = async (ticket) => {
   try {
-    const result = await client
-      .db(databaseName)
-      .collection(collectionName)
-      .insertOne({
-        ticket: ticket.id,
-        description: ticket.description,
-        details: ticket.details,
-        done: false,
-        sector: "cafeteria",
-        createdAt: new Date(),
-        time: 0,
-      });
-    if (!result.acknowledged) {
-      console.log(`Item não inserido na comanda`);
+    // Verify if the ticket represents an update or insert operation
+    if (
+      ticket.quantity == null &&
+      ticket.microterminal == null &&
+      ticket.dscrpt == null
+    ) {
+      console.log("Ticket is an update operation");
+      // Update item based on the itemNumber and id
+      const result = await client
+        .db(databaseName)
+        .collection(collectionName)
+        .updateOne(
+          { itemNumber: ticket.itemNumber, id: ticket.id },
+          { $set: { details: ticket.details } }
+        );
+      console.log(result);
+      console.log("Item updated");
+    } else {
+      console.log("Ticket in an insert operation");
+      // Insert item
+      const result = await client
+        .db(databaseName)
+        .collection(collectionName)
+        .insertOne({
+          ticket: ticket.id,
+          description: ticket.description,
+          details: ticket.details,
+          done: false,
+          sector: "cafeteria",
+          createdAt: new Date(),
+          time: 0,
+        });
+      if (!result.acknowledged) {
+        console.log("Unable to insert item");
+      } else {
+        console.log("Item inserted");
+      }
     }
   } catch (error) {
     console.log(error);
