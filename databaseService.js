@@ -40,7 +40,7 @@ const insertItem = async (ticket) => {
         .collection(collectionName)
         .insertOne({
           ticket: ticket.id,
-          description: ticket.dscrpt,
+          description: ticket.dscrpt.replace(/ +(?= )/g, ""),
           details: ticket.details,
           done: false,
           sector: "cafeteria",
