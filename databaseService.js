@@ -29,7 +29,7 @@ const insertItem = async (ticket) => {
         .db(databaseName)
         .collection(collectionName)
         .updateOne(
-          { itemNumber: ticket.itemNumber, id: ticket.id },
+          { itemNumber: ticket.itemNumber, ticket: ticket.id },
           { $set: { details: ticket.details } }
         );
       console.log(result);
