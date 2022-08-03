@@ -40,11 +40,13 @@ const insertItem = async (ticket) => {
         .collection(collectionName)
         .insertOne({
           ticket: ticket.id,
-          description: ticket.description,
+          description: ticket.dscrpt,
           details: ticket.details,
           done: false,
           sector: "cafeteria",
           createdAt: new Date(),
+          productId: ticket.productId,
+          itemNumber: ticket.itemNumber,
           time: 0,
         });
       if (!result.acknowledged) {

@@ -48,7 +48,7 @@ const fetchSQLData = async () => {
   try {
     await sql.connect(sqlConfig);
     const result = await sql.query("select * from dbo.itensComandas");
-    await sql.query("DELETE FROM dbo.itensComandas");
+    //await sql.query("DELETE FROM dbo.itensComandas");
     await sql.close();
     return result;
   } catch (err) {
