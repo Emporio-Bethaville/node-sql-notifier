@@ -35,26 +35,34 @@ const insertItem = async (ticket) => {
       console.log(result);
       console.log("Item updated");
     } else {
-      console.log("Ticket in an insert operation");
-      // Insert item
-      const result = await client
-        .db(databaseName)
-        .collection(collectionName)
-        .insertOne({
-          ticket: ticket.id,
-          description: ticket.dscrpt.replace(/ +(?= )/g, ""),
-          details: ticket.details,
-          done: false,
-          sector: "cafeteria",
-          createdAt: new Date(),
-          productId: ticket.productId,
-          itemNumber: ticket.itemNumber,
-          time: 0,
-        });
-      if (!result.acknowledged) {
-        console.log("Unable to insert item");
+      // Verify if item is an invalid operation
+      if (
+        ticket.dscrpt == null &&
+        (ticket.details != "" || ticket.details != null)
+      ) {
+        console.log("Ticket is an invalid operation");
       } else {
-        console.log("Item inserted");
+        console.log("Ticket in an insert operation");
+        // Insert item
+        const result = await client
+          .db(databaseName)
+          .collection(collectionName)
+          .insertOne({
+            ticket: ticket.id,
+            description: ticket.dscrpt.replace(/ +(?= )/g, ""),
+            details: ticket.details,
+            done: false,
+            sector: "cafeteria",
+            createdAt: new Date(),
+            productId: ticket.productId,
+            itemNumber: ticket.itemNumber,
+            time: 0,
+          });
+        if (!result.acknowledged) {
+          console.log("Unable to insert item");
+        } else {
+          console.log("Item inserted");
+        }
       }
     }
   } catch (error) {
