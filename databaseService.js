@@ -32,7 +32,6 @@ const insertItem = async (ticket) => {
           { itemNumber: ticket.itemNumber, ticket: ticket.id },
           { $set: { details: ticket.details } }
         );
-      console.log(result);
       console.log("Item updated");
     } else {
       // Verify if item is an invalid operation
@@ -40,7 +39,8 @@ const insertItem = async (ticket) => {
         ticket.dscrpt == null &&
         (ticket.details != "" || ticket.details != null)
       ) {
-        console.log("Ticket is an invalid operation");
+        // Ticket is an invalid operation
+        return;
       } else {
         console.log("Ticket in an insert operation");
         // Insert item
