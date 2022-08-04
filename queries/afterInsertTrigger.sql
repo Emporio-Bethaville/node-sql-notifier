@@ -36,6 +36,8 @@ from
 select @dscrpt = (SELECT stProduto FROM [NATI2].[dbo].[prd_Produtos] where idProduto=@productId)
 select @sector = (SELECT idPrint FROM [NATI2].[dbo].[mt_ProdutosPrint] where idProduto = @productId and idMicroterminal = @microterminal);
 
+IF @sector IS NOT NULL
+BEGIN
 insert into
     OrdersApp.dbo.itensComandas (
         id,
@@ -62,4 +64,5 @@ values
 		@itemNumber,
         @sector
     )
+END
 GO
