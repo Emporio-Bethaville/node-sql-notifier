@@ -52,7 +52,7 @@ const insertItem = async (ticket) => {
             description: ticket.dscrpt.replace(/ +(?= )/g, ""),
             details: ticket.details,
             done: false,
-            sector: "cafeteria",
+            sector: ticket.sector,
             createdAt: new Date(),
             productId: ticket.productId,
             itemNumber: ticket.itemNumber,

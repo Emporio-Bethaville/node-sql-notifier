@@ -17,6 +17,9 @@ declare @details nvarchar(225);
 declare @productId int;
 
 declare @itemNumber int;
+
+declare @sector int;
+
 select
     @id = i.idComanda,
     @date = i.dtData,
@@ -31,6 +34,7 @@ from
     inserted i;
 
 select @dscrpt = (SELECT stProduto FROM [NATI2].[dbo].[prd_Produtos] where idProduto=@productId)
+select @sector = (SELECT idPrint FROM [NATI2].[dbo].[mt_ProdutosPrint] where idProduto = @productId and idMicroterminal = @microterminal);
 
 insert into
     OrdersApp.dbo.itensComandas (
@@ -42,7 +46,8 @@ insert into
         dscrpt,
         details,
         productId,
-		itemNumber
+		itemNumber,
+        sector
     )
 values
     (
@@ -54,6 +59,7 @@ values
         @dscrpt,
         @details,
         @productId,
-		@itemNumber
+		@itemNumber,
+        @sector
     )
 GO
