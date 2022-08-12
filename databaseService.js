@@ -42,7 +42,7 @@ const insertItem = async (ticket) => {
         // Ticket is an invalid operation
         return;
       } else {
-        console.log("Ticket in an insert operation");
+        console.log("Ticket is an insert operation");
         // Insert item
         const result = await client
           .db(databaseName)
@@ -56,6 +56,7 @@ const insertItem = async (ticket) => {
             createdAt: new Date(),
             productId: ticket.productId,
             itemNumber: ticket.itemNumber,
+            tableId: ticket.tableId,
             time: 0,
           });
         if (!result.acknowledged) {
