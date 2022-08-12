@@ -1,73 +1,66 @@
-CREATE TRIGGER trgAfterInsert ON [ dbo ].[ mt_Itens ] FOR INSERT AS declare @ id int;
+CREATE TRIGGER trgAfterInsert ON [ dbo ].[ mt_Itens ] FOR INSERT AS 
 
-declare @ date datetime;
-
-declare @ quantity float;
-
-declare @ person varchar(50);
-
-declare @ microterminal varchar(50);
-
-declare @ dscrpt varchar(29);
-
-declare @ details nvarchar(225);
-
-declare @ productId int;
-
-declare @ itemNumber int;
-
-declare @ sector int;
-
-declare @ tableId int;
-
-declare @ unit varchar(2);
+declare @id int;
+declare @date datetime;
+declare @quantity float;
+declare @person varchar(50);
+declare @microterminal varchar(50);
+declare @dscrpt varchar(29);
+declare @details nvarchar(225);
+declare @productId int;
+declare @itemNumber int;
+declare @sector int;
+declare @tableId int;
+declare @unit varchar(2);
 
 select
-  @ id = i.idComanda,
-  @ date = i.dtData,
-  @ quantity = i.nrQuantidade,
-  @ person = i.stOperador,
-  @ microterminal = i.idMicroterminal,
-  @ productId = i.idProduto,
-  @ details = i.stIncremento,
-  @ itemNumber = i.nrItem,
-  @ unit = i.medida,
+  @id = i.idComanda,
+  @date = i.dtData,
+  @quantity = i.nrQuantidade,
+  @person = i.stOperador,
+  @microterminal = i.idMicroterminal,
+  @productId = i.idProduto,
+  @details = i.stIncremento,
+  @itemNumber = i.nrItem,
+  @unit = i.medida
 from
   inserted i;
 
 select
-  @ dscrpt = (
+  @dscrpt = (
     SELECT
       stProduto
     FROM
       [ NATI2 ].[ dbo ].[ prd_Produtos ]
     where
-      idProduto = @ productId
+      idProduto = @productId
   )
+
 select
-  @ sector = (
+  @sector = (
     SELECT
       idPrint
     FROM
       [ NATI2 ].[ dbo ].[ mt_ProdutosPrint ]
     where
-      idProduto = @ productId
-      and idMicroterminal = @ microterminal
+      idProduto = @productId
+      and idMicroterminal = @microterminal
   );
 
 select
-  @ tableId = (
+  @tableId = (
     SELECT
       idMesa
     FROM
       [ NATI2 ].[ dbo ].[ mt_Atendimentos ]
     where
-      idComanda = @ id
+      idComanda = @id
   );
 
-IF @ sector IS NOT NULL BEGIN IF @ unit = 'UN' BEGIN DECLARE @ cnt INT = 0;
+IF @sector IS NOT NULL BEGIN 
+IF @unit = 'UN' BEGIN DECLARE @cnt INT = 0;
 
-WHILE @ cnt < @ quantity BEGIN
+WHILE @cnt < @quantity BEGIN
 insert into
   OrdersApp.dbo.itensComandas (
     id,
@@ -84,22 +77,25 @@ insert into
   )
 values
   (
-    @ id,
-    @ date,
+    @id,
+    @date,
     1,
-    @ person,
-    @ microterminal,
-    @ dscrpt,
-    @ details,
-    @ productId,
-    @ itemNumber,
-    @ sector,
-    @ tableId
+    @person,
+    @microterminal,
+    @dscrpt,
+    @details,
+    @productId,
+    @itemNumber,
+    @sector,
+    @tableId
   )
 SET
-  @ cnt = @ cnt + 1;
+  @cnt = @cnt + 1;
 
 END
+
+END
+
 ELSE BEGIN
 insert into
   OrdersApp.dbo.itensComandas (
@@ -117,18 +113,19 @@ insert into
   )
 values
   (
-    @ id,
-    @ date,
-    @ quantity,
-    @ person,
-    @ microterminal,
-    @ dscrpt,
-    @ details,
-    @ productId,
-    @ itemNumber,
-    @ sector,
-    @ tableId
+    @id,
+    @date,
+    @quantity,
+    @person,
+    @microterminal,
+    @dscrpt,
+    @details,
+    @productId,
+    @itemNumber,
+    @sector,
+    @tableId
   )
 END
+
 END
-END GO
+GO
