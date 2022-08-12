@@ -1,4 +1,5 @@
-CREATE TRIGGER trgAfterInsert ON [ dbo ].[ mt_Itens ] FOR INSERT AS 
+CREATE TRIGGER trgAfterInsert ON [dbo].[mt_Itens] FOR INSERT AS 
+-- UPDATE TRIGGER [dbo].[trgAfterInsert] ON [mt_Itens] FOR INSERT AS
 
 declare @id int;
 declare @date datetime;
@@ -26,41 +27,21 @@ select
 from
   inserted i;
 
-select
-  @dscrpt = (
-    SELECT
-      stProduto
-    FROM
-      [ NATI2 ].[ dbo ].[ prd_Produtos ]
-    where
-      idProduto = @productId
-  )
+select @dscrpt = (SELECT stProduto FROM [NATI2].[dbo].[prd_Produtos] where idProduto = @productId)
+select @sector = (SELECT idPrint FROM [NATI2].[dbo].[mt_ProdutosPrint] where idProduto = @productId and idMicroterminal = @microterminal);
+select @tableId = (SELECT idMesa FROM [NATI2].[dbo].[mt_Atendimentos] where idComanda = @id);
 
-select
-  @sector = (
-    SELECT
-      idPrint
-    FROM
-      [ NATI2 ].[ dbo ].[ mt_ProdutosPrint ]
-    where
-      idProduto = @productId
-      and idMicroterminal = @microterminal
-  );
+IF @sector IS NOT NULL
+BEGIN
 
-select
-  @tableId = (
-    SELECT
-      idMesa
-    FROM
-      [ NATI2 ].[ dbo ].[ mt_Atendimentos ]
-    where
-      idComanda = @id
-  );
+IF @unit = 'UN'
+BEGIN
 
-IF @sector IS NOT NULL BEGIN 
-IF @unit = 'UN' BEGIN DECLARE @cnt INT = 0;
+DECLARE @cnt int = 0;
 
-WHILE @cnt < @quantity BEGIN
+WHILE @cnt < @quantity
+BEGIN
+
 insert into
   OrdersApp.dbo.itensComandas (
     id,
@@ -92,11 +73,12 @@ values
 SET
   @cnt = @cnt + 1;
 
-END
+END -- End While
 
-END
+END -- End IF @unit = 'UN'
 
-ELSE BEGIN
+ELSE -- Else if @unit != 'KG'
+BEGIN
 insert into
   OrdersApp.dbo.itensComandas (
     id,
@@ -125,7 +107,7 @@ values
     @sector,
     @tableId
   )
-END
+END -- End Else if @unit != 'KG'
 
-END
+END -- END IF @sector IS NOT NULL
 GO
