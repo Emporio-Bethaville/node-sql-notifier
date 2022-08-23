@@ -33,6 +33,16 @@ const insertItem = async (ticket) => {
           { $set: { details: ticket.details, tableId: ticket.tableId } }
         );
       console.log("Item updated");
+    } else if (ticket.details == "Update Table ID") {
+      console.log("Update table operation");
+      const result = await client
+        .db(databaseName)
+        .collection(collectionName)
+        .updateMany(
+          { ticket: ticket.id },
+          { $set: { tableId: ticket.tableId } }
+        );
+      console.log("Items updated to new table Id");
     } else {
       // Verify if item is an invalid operation
       if (
