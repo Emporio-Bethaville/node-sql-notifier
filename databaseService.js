@@ -15,8 +15,20 @@ const collectionName = "Comandas";
 // Insert or update an item in the database
 const insertItem = async (ticket) => {
   try {
+    /* Updates the tableId of all the items in a ticket. */
+    if (ticket.details == "Update Table ID") {
+      console.log("Update table operation");
+      const result = await client
+        .db(databaseName)
+        .collection(collectionName)
+        .updateMany(
+          { ticket: ticket.id },
+          { $set: { tableId: ticket.tableId } }
+        );
+      console.log("Items updated to new table Id", result);
+    }
     // Verify if the ticket represents an update or insert operation
-    if (
+    else if (
       ticket.quantity == null &&
       ticket.microterminal == null &&
       ticket.dscrpt == null &&
@@ -32,17 +44,7 @@ const insertItem = async (ticket) => {
           { itemNumber: ticket.itemNumber, ticket: ticket.id },
           { $set: { details: ticket.details, tableId: ticket.tableId } }
         );
-      console.log("Item updated");
-    } else if (ticket.details == "Update Table ID") {
-      console.log("Update table operation");
-      const result = await client
-        .db(databaseName)
-        .collection(collectionName)
-        .updateMany(
-          { ticket: ticket.id },
-          { $set: { tableId: ticket.tableId } }
-        );
-      console.log("Items updated to new table Id");
+      console.log("Item updated", result);
     } else {
       // Verify if item is an invalid operation
       if (
@@ -72,7 +74,7 @@ const insertItem = async (ticket) => {
         if (!result.acknowledged) {
           console.log("Unable to insert item");
         } else {
-          console.log("Item inserted");
+          console.log("Item inserted", result);
         }
       }
     }
