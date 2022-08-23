@@ -30,7 +30,7 @@ const insertItem = async (ticket) => {
         .collection(collectionName)
         .updateOne(
           { itemNumber: ticket.itemNumber, ticket: ticket.id },
-          { $set: { details: ticket.details } }
+          { $set: { details: ticket.details, tableId: ticket.tableId } }
         );
       console.log("Item updated");
     } else {

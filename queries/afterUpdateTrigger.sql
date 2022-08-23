@@ -1,4 +1,5 @@
 CREATE TRIGGER trgAfterUpdate ON [dbo].[mt_Itens] FOR UPDATE AS
+-- UPDATE TRIGGER [dbo].[trgAfterUpdate] on [mt_Itens]
 
 declare @id int;
 declare @date datetime;
@@ -6,6 +7,7 @@ declare @person varchar(50);
 declare @details nvarchar(225);
 declare @productId int;
 declare @itemNumber int;
+declare @tableId int;
 
 select
     @id = i.idComanda,
@@ -17,6 +19,8 @@ select
 from
     inserted i;
 
+select @tableId = (SELECT idMesa FROM [NATI2].[dbo].[mt_Atendimentos] where idComanda = @id);
+
 insert into
     OrdersApp.dbo.itensComandas (
         id,
@@ -25,7 +29,8 @@ insert into
         microterminal,
         details,
         productId,
-		itemNumber
+		itemNumber,
+        tableId
     )
 values
     (
@@ -35,6 +40,7 @@ values
         NULL,
         @details,
         @productId,
-		@itemNumber
+		@itemNumber,
+        @tableId
     )
 GO
