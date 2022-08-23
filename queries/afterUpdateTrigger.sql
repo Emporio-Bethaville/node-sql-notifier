@@ -1,5 +1,5 @@
 CREATE TRIGGER trgAfterUpdate ON [dbo].[mt_Itens] FOR UPDATE AS
--- UPDATE TRIGGER [dbo].[trgAfterUpdate] on [mt_Itens]
+-- ALTER TRIGGER [dbo].[trgAfterUpdate] on [mt_Itens]
 
 declare @id int;
 declare @date datetime;
