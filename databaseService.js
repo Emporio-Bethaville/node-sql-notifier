@@ -25,7 +25,18 @@ const insertItem = async (ticket) => {
           { ticket: ticket.id },
           { $set: { tableId: ticket.tableId } }
         );
-      console.log("Items updated to new table Id", result);
+      console.log("Items updated to new table Id");
+    } else if (ticket.details == "Delete Item") {
+      console.log("Delete operation");
+      const result = await client
+        .db(databaseName)
+        .collection(collectionName)
+        .deleteOne({
+          ticket: ticket.id,
+          productId: ticket.productId,
+          itemNumber: ticket.itemNumber,
+        });
+      console.log("Item deleted");
     }
     // Verify if the ticket represents an update or insert operation
     else if (
@@ -44,7 +55,7 @@ const insertItem = async (ticket) => {
           { itemNumber: ticket.itemNumber, ticket: ticket.id },
           { $set: { details: ticket.details, tableId: ticket.tableId } }
         );
-      console.log("Item updated", result);
+      console.log("Item updated");
     } else {
       // Verify if item is an invalid operation
       if (
@@ -74,7 +85,7 @@ const insertItem = async (ticket) => {
         if (!result.acknowledged) {
           console.log("Unable to insert item");
         } else {
-          console.log("Item inserted", result);
+          console.log("Item inserted");
         }
       }
     }
