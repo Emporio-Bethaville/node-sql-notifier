@@ -12,7 +12,7 @@ declare @productId int;
 declare @itemNumber int;
 declare @sector int;
 declare @tableId int;
-declare @unit varchar(2);
+declare @unit smallint;
 
 select
   @id = i.idComanda,
@@ -22,19 +22,20 @@ select
   @microterminal = i.idMicroterminal,
   @productId = i.idProduto,
   @details = i.stIncremento,
-  @itemNumber = i.nrItem,
-  @unit = i.medida
+  @itemNumber = i.nrItem
 from
   inserted i;
 
 select @dscrpt = (SELECT stProduto FROM [NATI2].[dbo].[prd_Produtos] where idProduto = @productId)
 select @sector = (SELECT idPrint FROM [NATI2].[dbo].[mt_ProdutosPrint] where idProduto = @productId and idMicroterminal = @microterminal);
 select @tableId = (SELECT idMesa FROM [NATI2].[dbo].[mt_Atendimentos] where idComanda = @id);
+select @unit = (SELECT idMedida FROM [NATI2].[dbo].[prd_Produtos] where idProduto = @productId);
 
 IF @sector IS NOT NULL
 BEGIN
 
-IF @unit = 'UN'
+-- If unit is 1, it's a unitary product
+IF @unit = 1
 BEGIN
 
 DECLARE @cnt int = 0;
@@ -75,9 +76,9 @@ SET
 
 END -- End While
 
-END -- End IF @unit = 'UN'
+END -- End IF @unit = 1
 
-ELSE -- Else if @unit != 'KG'
+ELSE -- Else if @unit != 1
 BEGIN
 insert into
   OrdersApp.dbo.itensComandas (
@@ -107,7 +108,7 @@ values
     @sector,
     @tableId
   )
-END -- End Else if @unit != 'KG'
+END -- End Else if @unit != '1'
 
 END -- END IF @sector IS NOT NULL
 GO
