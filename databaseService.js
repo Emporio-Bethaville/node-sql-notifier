@@ -71,15 +71,16 @@ const insertItem = async (ticket) => {
           .db(databaseName)
           .collection(collectionName)
           .insertOne({
-            ticket: ticket.id,
+            createdAt: new Date(),
             description: ticket.dscrpt.replace(/ +(?= )/g, ""),
             details: ticket.details,
             done: false,
-            sector: ticket.sector,
-            createdAt: new Date(),
-            productId: ticket.productId,
             itemNumber: ticket.itemNumber,
+            person: ticket.person,
+            productId: ticket.productId,
+            sector: ticket.sector,
             tableId: ticket.tableId,
+            ticket: ticket.id,
             time: 0,
           });
         if (!result.acknowledged) {
